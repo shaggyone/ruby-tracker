@@ -1,6 +1,6 @@
 require 'digest/sha1'
 
-module RubyTracker
+module Torrent
   
   class BencodedRecord
     def self.has_subrecords(*added_subrecords)
@@ -16,9 +16,9 @@ module RubyTracker
     end
 
     def initialize(*args)
-      @bencoded_fields = {}
-      @bencoded_hashs  = {}
-      @dirty_flags = {}
+      #@bencoded_fields = {}
+      #@bencoded_hashs  = {}
+      #@dirty_flags = {}
       @data = {}
       @bencoded_data = ""
       @dirty = false
@@ -57,7 +57,7 @@ module RubyTracker
     end
 
     def set_value(field_name, value)
-      @dirty_flags[field_name] = true
+#     @dirty_flags[field_name] = true
       @dirty = true
       if value.kind_of?(Hash)
         @data[field_name] = BencodedRecord.new(value)
@@ -70,24 +70,24 @@ module RubyTracker
       @data[field_name]
     end
 
-    def get_field_hash(field_name)
-      if field_dirty?(field_name)
-        get_bencoded_data(field_name)
-      else
-        ::Digest::SHA1.hexdigest(@bencoded_hashs[field_name])
-      end
-    end
+#    def get_field_hash(field_name)
+#      if field_dirty?(field_name)
+#        get_bencoded_data(field_name)
+#      else
+#        ::Digest::SHA1.hexdigest(@bencoded_hashs[field_name])
+#      end
+#    end
 
-    def get_bencoded_data(field_name)
-      if @data[field_name].nil? then
-        return nil
-      end
-      if field_dirty?(field_name) then
-        field_name.bencode + @data[field_name].bencode
-      else
-        @bencoded_fields[field_name]
-      end
-    end
+#    def get_bencoded_data(field_name)
+#      if @data[field_name].nil? then
+#        return nil
+#      end
+#      if field_dirty?(field_name) then
+#        field_name.bencode + @data[field_name].bencode
+#      else
+#        @bencoded_fields[field_name]
+#      end
+#    end
 
     def field_dirty?(field_name)
       @dirty_flags[field_name]
@@ -108,9 +108,9 @@ module RubyTracker
     end
 
     def set_field_bencoded_data(field_name, bencoded_value, value)
-      @bencoded_fields[field_name] = bencoded_value
-      @bencoded_hashs[field_name]  = ::Digest::SHA1.hexdigest(bencoded_value)
-      @dirty_flags[field_name] = false
+      #@bencoded_fields[field_name] = bencoded_value
+      #@bencoded_hashs[field_name]  = ::Digest::SHA1.hexdigest(bencoded_value)
+      #@dirty_flags[field_name] = false
       @data[field_name] = value
     end
 
@@ -128,7 +128,7 @@ module RubyTracker
             when ?d
               start_pos = scanner.pos
               scanner.pos += 1
-              field_start_pos = scanner.pos
+#             field_start_pos = scanner.pos
               rec = BencodedRecord.new
               until scanner.scan(/e/)
                 field_name = parse(scanner)
@@ -137,14 +137,15 @@ module RubyTracker
                 end
                 field_name = field_name.to_s
                 field_value = parse(scanner)
-                field_end_pos = scanner.pos
-                bencoded_value = scanner.string[field_start_pos, field_end_pos-field_start_pos]
-                rec.set_field_bencoded_data field_name, bencoded_value, field_value
-                field_start_pos = field_end_pos
+#                field_end_pos = scanner.pos
+#               bencoded_value = scanner.string[field_start_pos, field_end_pos-field_start_pos]
+#               rec.set_field_bencoded_data field_name, bencoded_value, field_value
+                rec.set_value field_name, field_value
+#               field_start_pos = field_end_pos
               end
               end_pos = scanner.pos
               rec.set_bencoded_data scanner.string[start_pos, end_pos-start_pos]
-              rec.save
+#             rec.save
               rec
             when ?0 .. ?9
               num = scanner.scan_until(/:/) or
@@ -173,7 +174,6 @@ module RubyTracker
       end
     end
 
-
     def dirty?
       return true if @dirty
       @data.each do |key,obj|
@@ -181,14 +181,7 @@ module RubyTracker
           return true if obj.dirty?
         end
       end
-    end
-    
-    def to_a
-      @data
-    end
-
-    def subrecords_objects
-      @subrecord_objects
+      false
     end
   end
 
@@ -202,34 +195,17 @@ module RubyTracker
     end
 
     def initialize(data)
-      @data = data
-      @torrent_data = TorrentData.new(@data)
-
+      @torrent_data = BencodedRecord.load(data)
     end
 
     def method_missing(*args)
       self.call2(*args)
     end
+  end
 
-    def info
+  module TorrentCatalog
+    def get_torrent(info_hash, options={})
 
-    end
-
-    def call2(methodName, *args)
-      if methodName.end_with("=") 
-        fieldName = s[0, s.length-1]
-        if not fieldName.eql?("info") then
-          @data[fieldName] = args.first
-        end
-      else
-        
-      end
-    end
-
-    class Info
-      def initialize(info_data)
-        @info_data = info_data
-      end
     end
   end
 end

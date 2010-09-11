@@ -1,6 +1,13 @@
 require 'strscan'
 
 module BEncode
+  class DecodeError < StandardError
+
+  end
+
+  class EncodeError < StandardError
+  end
+
   # BEncodes +obj+
   def self.dump(obj)
     obj.bencode
