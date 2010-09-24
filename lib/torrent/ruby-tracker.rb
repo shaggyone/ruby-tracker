@@ -129,7 +129,7 @@ module Torrent
               start_pos = scanner.pos
               scanner.pos += 1
 #             field_start_pos = scanner.pos
-              rec = BencodedRecord.new
+              rec = self.new
               until scanner.scan(/e/)
                 field_name = parse(scanner)
                 unless field_name.is_a? String or field_name.is_a? Fixnum

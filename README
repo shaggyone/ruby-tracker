@@ -1,0 +1,105 @@
+This gem allows you to add torrent tracker functionality to your site. As well you can use it
+to make a simple torrent tracker without any site, as I did.
+
+At the moment it has several classes and modules.
+
+= Torrent::BencodedRecord =
+The BencodedRecord class (most likely 'll be excluded to external gem)
+allows you to work with bencoded dictionaties. Its' main difference from its'
+analogues is hex_digest functionality. If will return the same corrent
+hex_digest for any element
+
+For example the following code will retun info_hash for loaded torrent file:
+
+ Torrent::BencodedRecord.load(File.read(filename)).info.hex_digest
+
+if you use ruby 1.9.x you should set encoding for loaded data. It can be done
+by using the following code:
+
+ data = File.load(filename)
+ data = data.force_encoding("ISO-8859-1") if data.respond_to?(:force_encoding)
+ torrent = Torrent::BencodedRecord.load(data)
+ torrent.info.hex_digest
+
+= Torrent::PeerInfo ==
+PeerInfo module. Depending on your app you may want do store info about peers in database
+as ActiveRecord. Or you may want to load then into app's memory (this can be sutable for tiny
+apps). 
+
+
+For example you may create
+  class PeerInfo < ActiveRecord::Base
+    include Torrent::PeerInfoModule
+    attr_accessible :info_hash, :peer_id, :ip, :port, :status, :left, :downloaded, :uploaded
+    act_as_peer_info
+
+    def self.create_peer(params)
+      self.new(params)
+    end
+
+    def self.get_peer(params)
+      self.first(:peer_id => params[:peer_id], :info_hash => params[:info_hash])
+    end
+
+    def self.find_peers(params)
+      self.all(:info_hash => params[:info_hash])
+    end
+
+    . . . .
+    code goes here
+    . . . .
+  end
+
+Or latter it'd be enough to tell
+  class PeerInfo < ActiveRecord::Base
+    include Torrent::AciveRecord::PeerInfoModule
+    act_as_peer_info
+
+  end
+and create following migration
+  class PeerInfoMigration
+    def up
+      add_peer_info_columns :peer_info
+    end
+
+    def down
+      remove_peer_info_columns :peer_info
+    end
+  end
+
+= Torrent::TorrentDirectory =
+TorrentDirectory module -- it's main puppose is to tell Tracker if the mentioned
+torrent is allowed for sharing on the tracker.
+
+It has abstract method allowed_torrent? which takes hash of HTTP GET request params, sent by
+torrent client. (Actually, ajustments shoud be done to the params, before calling this method)
+and returns true or false, wich shows will the tracker share the torrent or not.
+
+For example the following class will tell tracker to share any torrent to any user, who add
+its' announce url o his torrent file.
+
+  class PlainTorrentDirectory
+    include Torrent::TorrentDirectory
+
+    def self.allowed_torrent?(params)
+      true
+    end
+  end
+
+= Torrent::Tracker =
+
+The main magic is here. It's quite simple in use:
+  def init_tracker
+    @tracker = Torrent::Tracker.new
+    @tracker.torrent_directory = PlainTorrentDirectory
+    @tracker.peer_info_class = Torrent::MemoryPeerInfo
+  end
+
+  def announce
+    # prepare params
+    params[:ip] ||= request.env['REMOTE_ADDR']           # use params[:ip] ||= request.ip for sinatra
+
+    render :text => @tracker.announce(params).bencode
+  end
+
+

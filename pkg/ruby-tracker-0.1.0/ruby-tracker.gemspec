@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Victor Zagorski"]
-  s.date = %q{2010-09-09}
+  s.date = %q{2010-09-22}
   s.description = %q{Allowes you to create a simple torrent tracker for your file sharing.}
   s.email = %q{victor@zagorski.ru}
   s.extra_rdoc_files = ["lib/core_ext/array.rb", "lib/core_ext/hash.rb", "lib/core_ext/integer.rb", "lib/core_ext/io.rb", "lib/core_ext/object.rb", "lib/core_ext/string.rb", "lib/torrent/bencode.rb", "lib/torrent/ruby-tracker.rb", "lib/torrent/tracker.rb"]
