@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.date = %q{2010-09-26}
   s.description = %q{Allowes you to create a simple torrent tracker for your file sharing.}
   s.email = %q{victor@zagorski.ru}
-  s.extra_rdoc_files = ["README", "lib/ruby-tracker.rb", "lib/torrent/kept.rb", "lib/torrent/ruby-tracker.rb", "lib/torrent/tracker.rb"]
-  s.files = ["Gemfile", "Gemfile.lock", "Manifest", "README", "Rakefile", "init.rb", "lib/ruby-tracker.rb", "lib/torrent/kept.rb", "lib/torrent/ruby-tracker.rb", "lib/torrent/tracker.rb", "rails/init.rb", "ruby-tracker.gemspec", "test/ruby-tracker-test.rb", "test/torrents/test.torrent"]
+  s.extra_rdoc_files = ["README", "lib/ruby-tracker.rb", "lib/torrent/tracker.rb"]
+  s.files = ["Gemfile", "Gemfile.lock", "Manifest", "README", "Rakefile", "init.rb", "lib/ruby-tracker.rb", "lib/torrent/tracker.rb", "rails/init.rb", "ruby-tracker.gemspec", "test/ruby-tracker-test.rb", "test/torrents/test.torrent"]
   s.homepage = %q{http://github.com/shaggyone/ruby-tracker}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Ruby-tracker", "--main", "README"]
   s.require_paths = ["lib"]

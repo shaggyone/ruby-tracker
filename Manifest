@@ -5,8 +5,6 @@ README
 Rakefile
 init.rb
 lib/ruby-tracker.rb
-lib/torrent/kept.rb
-lib/torrent/ruby-tracker.rb
 lib/torrent/tracker.rb
 rails/init.rb
 ruby-tracker.gemspec
