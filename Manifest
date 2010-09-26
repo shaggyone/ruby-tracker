@@ -1,4 +1,7 @@
+Gemfile
+Gemfile.lock
 Manifest
+README
 Rakefile
 init.rb
 lib/core_ext/array.rb
@@ -7,7 +10,9 @@ lib/core_ext/integer.rb
 lib/core_ext/io.rb
 lib/core_ext/object.rb
 lib/core_ext/string.rb
+lib/ruby-tracker.rb
 lib/torrent/bencode.rb
+lib/torrent/kept.rb
 lib/torrent/ruby-tracker.rb
 lib/torrent/tracker.rb
 rails/init.rb
