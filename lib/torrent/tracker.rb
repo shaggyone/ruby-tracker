@@ -1,8 +1,3 @@
-Dir.glob(File.join(File.dirname(__FILE__), '..', 'core_ext', '*.rb')).each do |f|
-  require f
-end
-
-require File.join(File.dirname(__FILE__), 'ruby-tracker')
 require 'ipaddr'
 
 module Torrent
