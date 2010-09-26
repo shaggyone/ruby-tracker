@@ -50,7 +50,7 @@ For example you may create
     . . . .
   end
 
-Or latter it'd be enough to tell
+There are plans to implement a super simple way to include it in rails.
   class PeerInfo < ActiveRecord::Base
     include Torrent::AciveRecord::PeerInfoModule
     act_as_peer_info
