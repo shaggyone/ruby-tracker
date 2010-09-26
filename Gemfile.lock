@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/shaggyone/bencoded-record.git
+  revision: 78f4c11e9344f4fab0f925ce9fc87970cbc9e0ec
+  specs:
+    bencoded-record (0.0.1)
+
+GIT
   remote: git://github.com/shaggyone/ruby-bencode.git
   revision: b08da24d3807a5391fdc3c3615332b7aa25c09d8
   specs:
@@ -12,3 +18,4 @@ PLATFORMS
 
 DEPENDENCIES
   bencode!
+  bencoded-record!
